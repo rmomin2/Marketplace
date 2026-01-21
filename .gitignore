@@ -1,0 +1,58 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/.vs
+## Visual Studio / .NET Core / Rider
+**/[Bb]in/
+**/[Oo]bj/
+.vs/
+!.vs/config/
+*.user
+*.suo
+*.sln.docstates
+*.cache
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## Publish
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+publish/
+
+## Azure
+*.azurePubxml
+**/.azure/
+
+## Rider (Mac)
+.idea/
+*.iws
+*.iml
+*.ipr
+
+## Aspire
+*.tye
+.tye/
+
+## User secrets
+secrets.json
+*.usersecrets
+
+## Docker
+**/*.dockerignore
+Dockerfile*
+docker-compose*
+
+## Logs
+logs/
+*.log
+
+## NuGet packages
+packages/
+
+## OS
+.DS_Store
+Thumbs.db

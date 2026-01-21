@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Client/" />
+  <Folder Name="/Server/" />
+  <Folder Name="/Server/Api/">
+    <Project Path="Server/Api/Marketplace.Api/Marketplace.Api.csproj" />
+  </Folder>
+  <Folder Name="/Server/BuildingBlocks/">
+    <Project Path="Server/BuildingBlocks/SharedKernel.Application/Marketplace.SharedKernel.Application.csproj" Id="6734fa30-6a29-4b21-a78b-bd9c5843a32a" />
+    <Project Path="Server/BuildingBlocks/SharedKernel.Domain/Marketplace.SharedKernel.Domain.csproj" Id="7a31a598-242d-4be1-b483-3e6f50696e14" />
+  </Folder>
+  <Folder Name="/Server/Modules/" />
+  <Folder Name="/Server/Modules/ItemListings/">
+    <Project Path="Server/Modules/ItemListings/Application/Marketplace.Modules.ItemListings.Application.csproj" Id="871e85ea-bfa5-42f8-b57e-bf89fd923315" />
+    <Project Path="Server/Modules/ItemListings/Domain/Marketplace.Modules.ItemListings.Domain.csproj" Id="6c187788-b80e-470d-933f-82a7e9abac57" />
+    <Project Path="Server/Modules/ItemListings/Infrastructure/Marketplace.Modules.ItemListings.Infrastructure.csproj" Id="41a20b3b-0752-4fb8-bd4e-6a31b6a02f70" />
+  </Folder>
+</Solution>
