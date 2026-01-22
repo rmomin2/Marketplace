@@ -15,7 +15,7 @@ public static class Items
             .WithApiVersionSet()
             .HasApiVersion(1, 0);
 
-        endpoints.MapGet("/", GetItemsWithPaginationAsync);//.RequireAuthorization();
+        endpoints.MapGet("/", GetItemsWithPaginationAsync).RequireAuthorization();
     }
 
     private static async Task<Ok<PaginatedList<ItemDto>>> GetItemsWithPaginationAsync(

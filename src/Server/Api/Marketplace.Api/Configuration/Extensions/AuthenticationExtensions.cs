@@ -7,20 +7,19 @@ public static class AuthenticationExtensions
 {
     public static IHostApplicationBuilder AddDefaultAuthentication(this IHostApplicationBuilder builder)
     {
-        var services = builder.Services;
-        var configuration = builder.Configuration;
+        var azureB2C = builder.Configuration.GetRequiredSection("B2C");
 
-        var azureB2C = configuration.GetRequiredSection("B2C");
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = $"{azureB2C["Authority"]}";
+                options.Audience = azureB2C["Audience"]; 
+                options.TokenValidationParameters.NameClaimType = "name";
+                options.TokenValidationParameters.ValidateIssuer = true;
+            });
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddMicrosoftIdentityWebApi(options =>
-        {
-            configuration.Bind("B2C", options);
-            options.TokenValidationParameters.NameClaimType = "name";
-        },
-
-        options => configuration.Bind("B2C", options));
-
+        builder.Services.AddAuthorization();
+        
         return builder;
     }
 }

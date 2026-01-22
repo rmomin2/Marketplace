@@ -18,9 +18,9 @@ public static class OpenApiExtensions
             return builder;
         }
         
-        var azureB2C = configuration.GetSection("B2C");
+        var b2C = configuration.GetSection("B2C");
 
-        if (!azureB2C.Exists())
+        if (!b2C.Exists())
         {
             // No auth needed
             return builder;
@@ -42,38 +42,26 @@ public static class OpenApiExtensions
             {
                 document.Components ??= new OpenApiComponents();
                 document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-                var authSection = openApiSection.GetSection("Auth");
-                var endpointSection = openApiSection.GetRequiredSection("Endpoint");
 
-                document.Components.SecuritySchemes.Add("oauth2", new OpenApiSecurityScheme
+                document.Components.SecuritySchemes.Add("Bearer", new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri(azureB2C.GetRequiredValue("Authority") + "/oauth2/v2.0/authorize"),
-                            TokenUrl = new Uri(azureB2C.GetRequiredValue("Authority") + "/oauth2/v2.0/token"),
-                            Scopes = new Dictionary<string, string>
-                        {
-                            {
-                                azureB2C.GetRequiredValue("ApiScope"), "API Access Scope"
-                            }
-                        }
-                        }
-                    }
+                    Type = SecuritySchemeType.Http,      
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "Paste 'Bearer [token from Postman]'"
                 });
 
                 document.Security = [
                     new OpenApiSecurityRequirement
                     {
                         {
-                            new OpenApiSecuritySchemeReference("oauth2"),
-                            [azureB2C.GetRequiredValue("ApiScope"), "API Access Scope"]
+                            new OpenApiSecuritySchemeReference("Bearer"),
+                            new List<string>()
                         }
                     }
                 ];
-
                 document.SetReferenceHostDocument();
                 return Task.CompletedTask;
             });
@@ -97,26 +85,9 @@ public static class OpenApiExtensions
             app.MapOpenApi();
             app.UseSwaggerUI(options =>
             {
-                var pathBase = configuration["PATH_BASE"] ?? string.Empty;
-                var authSection = openApiSection.GetSection("Auth");
-                var endpointSection = openApiSection.GetRequiredSection("Endpoint");
-
                 foreach (var description in app.DescribeApiVersions())
                 {
                     options.SwaggerEndpoint($"/openapi/{description.GroupName}.json", description.GroupName);
-                }
-
-                if (authSection.Exists())
-                {
-                    var b2c = configuration.GetRequiredSection("B2C");
-                    var clientId = authSection.GetRequiredValue("ClientId");
-
-                    options.OAuthClientId(clientId);
-                    options.OAuthUsePkce();
-                    options.OAuthScopeSeparator(" ");
-                    //options.OAuthAppName("Marketplace API");
-                    //options.OAuthScopes(apiScope);
-                    //var apiScope = b2c["ApiScope"];
                 }
             });
         }
